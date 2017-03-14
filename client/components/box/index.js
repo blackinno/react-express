@@ -4,58 +4,55 @@ import Paper from 'material-ui/Paper';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
+import { connect } from 'react-redux';
+import { UpdateCounter, DeleteCounter } from '../../lib/actions/counterActions';
 
 const style = {
-    padding: '10px',
+    padding: '20px',
     margin: 20,
     textAlign: 'center',
     display: 'inline-block',
 };
 
 class Box extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            counter: 0
-        }
 
-    }
-
-    componentWillReceiveProps(newProps) {
-        this.setState({ counter: newProps.counter});
-    }
-
-    sendCounter(value) {
+    updateCounter(value) {
         let id = this.props.id;
-        this.props.updateCounter(id, value);
+        let updatedBox = this.props.box.map(data => {
+            if (data.id === id && !(data.counter === 0 && value < 0)) {
+                data.counter += value;
+            }
+            return data
+        });
+        this.props.dispatch(UpdateCounter(updatedBox));
     }
 
-    sendId() {
-        this.props.removeBox(this.props.id);
+    removeBox() {
+        this.props.dispatch(DeleteCounter(this.props.id));
     }
 
     render() {
 
-        return ( 
+        return (
             <Paper style={style} zDepth={3} rounded={false}>
                 <Row>
                     <Col xs={12}>
                         <Row end="xs">
                             <Col xs={6} >
-                                <IconButton onTouchTap={this.sendId.bind(this)}>
+                                <IconButton onTouchTap={this.removeBox.bind(this)}>
                                     <DeleteIcon />
                                 </IconButton>
                             </Col>
                         </Row>
                     </Col>
                 </Row>
-                <h1>{this.state.counter}</h1>
-                <RaisedButton label="+" primary={true} onClick={this.sendCounter.bind(this, 1)} />
+                <h1>{this.props.counter}</h1>
+                <RaisedButton label="+" primary={true} onClick={this.updateCounter.bind(this, 1)} />
                 &nbsp;
-                <RaisedButton label="-" secondary={true} onClick={this.sendCounter.bind(this, -1)} />
+                <RaisedButton label="-" secondary={true} onClick={this.updateCounter.bind(this, -1)} />
             </Paper>
         )
     }
 }
 
-export default Box;
+export default connect()(Box);
