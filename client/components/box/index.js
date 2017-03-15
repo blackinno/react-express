@@ -50,9 +50,9 @@ class Box extends React.Component {
                     </Col>
                 </Row>
                 <h1>{this.state.counter}</h1>
-                <RaisedButton label="+" primary={true} onClick={this.sendCounter.bind(this, 1)} />
+                <RaisedButton label="+" primary={true} onTouchTap={this.sendCounter.bind(this, 1)} />
                 &nbsp;
-                <RaisedButton label="-" secondary={true} onClick={this.sendCounter.bind(this, -1)} />
+                <RaisedButton label="-" secondary={true} onTouchTap={this.sendCounter.bind(this, -1)} />
             </Paper>
         )
     }
